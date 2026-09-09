@@ -25,7 +25,7 @@ function Responses({ formId, onBack }) {
       setError("");
 
       const response = await fetch(
-        `http://localhost:5000/api/responses/form/${formId}`
+        `https://student-form-app-l2yr.onrender.com/api/responses/form/${formId}`
       );
 
       const data = await response.json();
@@ -73,7 +73,7 @@ function Responses({ formId, onBack }) {
       setExporting(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/responses/form/${formId}/csv`
+        `https://student-form-app-l2yr.onrender.com/api/responses/form/${formId}/csv`
       );
 
       if (!response.ok) {

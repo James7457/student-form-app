@@ -128,7 +128,7 @@ function FormBuilder({ form, setForm }) {
 
       if (!currentFormId) {
         const formResponse = await fetch(
-          "http://localhost:5000/api/forms",
+          "https://student-form-app-l2yr.onrender.com/api/forms",
           {
             method: "POST",
 
@@ -176,7 +176,7 @@ function FormBuilder({ form, setForm }) {
       ========================================= */
 
       const questionResponse = await fetch(
-        "http://localhost:5000/api/questions",
+        "https://student-form-app-l2yr.onrender.com/api/questions",
         {
           method: "POST",
 
@@ -230,9 +230,9 @@ function FormBuilder({ form, setForm }) {
           (option) => option.trim() !== ""
         );
 
-        for (const option of validOptions) {
+        for (const [optionIndex, option] of validOptions.entries()) {
           const optionResponse = await fetch(
-            "http://localhost:5000/api/options",
+            "https://student-form-app-l2yr.onrender.com/api/options",
             {
               method: "POST",
 
@@ -243,8 +243,7 @@ function FormBuilder({ form, setForm }) {
               body: JSON.stringify({
                 question_id: questionId,
                 option_text: option,
-                option_order:
-                  validOptions.indexOf(option) + 1,
+                option_order: optionIndex + 1,
               }),
             }
           );
@@ -259,7 +258,9 @@ function FormBuilder({ form, setForm }) {
             );
           }
 
-          savedOptions.push(option);
+          savedOptions.push({
+            option_text: option,
+          });
         }
       }
 
@@ -339,7 +340,11 @@ function FormBuilder({ form, setForm }) {
     setOptions(
       question.options &&
         question.options.length > 0
-        ? [...question.options]
+        ? question.options.map((option) =>
+            typeof option === "string"
+              ? option
+              : option.option_text
+          )
         : [""]
     );
 
@@ -370,7 +375,7 @@ function FormBuilder({ form, setForm }) {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/questions/${questionId}`,
+        `https://student-form-app-l2yr.onrender.com/api/questions/${questionId}`,
         {
           method: "DELETE",
         }
@@ -541,9 +546,14 @@ function FormBuilder({ form, setForm }) {
                           optionIndex
                         ) => (
                           <li
-                            key={optionIndex}
+                            key={
+                              option.id ||
+                              optionIndex
+                            }
                           >
-                            {option}
+                            {typeof option === "string"
+                              ? option
+                              : option.option_text}
                           </li>
                         )
                       )}
