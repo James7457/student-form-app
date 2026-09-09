@@ -147,7 +147,6 @@ function App() {
                 alert(
                   "Create and save a form first."
                 );
-
                 return;
               }
 
@@ -167,12 +166,10 @@ function App() {
       ===================================== */}
 
       {page === "builder" && (
-
         <FormBuilder
           form={form}
           setForm={handleFormUpdate}
         />
-
       )}
 
 
@@ -193,11 +190,9 @@ function App() {
 
 
             {form.description && (
-
               <p className="preview-description">
                 {form.description}
               </p>
-
             )}
 
 
@@ -251,11 +246,9 @@ function App() {
                         </span>
 
                         {question.required && (
-
                           <span className="required-star">
                             *
                           </span>
-
                         )}
 
                       </div>
@@ -307,7 +300,9 @@ function App() {
                                   />
 
                                   <span>
-                                    {option}
+                                    {typeof option === "string"
+                                      ? option
+                                      : option.option_text}
                                   </span>
 
                                 </label>
@@ -346,7 +341,9 @@ function App() {
                                   />
 
                                   <span>
-                                    {option}
+                                    {typeof option === "string"
+                                      ? option
+                                      : option.option_text}
                                   </span>
 
                                 </label>
@@ -382,10 +379,14 @@ function App() {
                                     optionIndex
                                   }
                                   value={
-                                    option
+                                    typeof option === "string"
+                                      ? option
+                                      : option.option_text
                                   }
                                 >
-                                  {option}
+                                  {typeof option === "string"
+                                    ? option
+                                    : option.option_text}
                                 </option>
 
                               )

@@ -221,6 +221,7 @@ function FormBuilder({ form, setForm }) {
 
       /* =========================================
          CREATE OPTIONS
+         OPTIONS ARE NOW SAVED IN PARALLEL
       ========================================= */
 
       let savedOptions = [];
@@ -230,38 +231,44 @@ function FormBuilder({ form, setForm }) {
           (option) => option.trim() !== ""
         );
 
-        for (const [optionIndex, option] of validOptions.entries()) {
-          const optionResponse = await fetch(
-            "https://student-form-app-l2yr.onrender.com/api/options",
-            {
-              method: "POST",
+        const optionResults = await Promise.all(
+          validOptions.map(
+            async (option, optionIndex) => {
+              const optionResponse = await fetch(
+                "https://student-form-app-l2yr.onrender.com/api/options",
+                {
+                  method: "POST",
 
-              headers: {
-                "Content-Type": "application/json",
-              },
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
 
-              body: JSON.stringify({
-                question_id: questionId,
+                  body: JSON.stringify({
+                    question_id: questionId,
+                    option_text: option,
+                    option_order: optionIndex + 1,
+                  }),
+                }
+              );
+
+              const optionData =
+                await optionResponse.json();
+
+              if (!optionResponse.ok) {
+                throw new Error(
+                  optionData.message ||
+                    "Failed to create option."
+                );
+              }
+
+              return {
                 option_text: option,
-                option_order: optionIndex + 1,
-              }),
+              };
             }
-          );
+          )
+        );
 
-          const optionData =
-            await optionResponse.json();
-
-          if (!optionResponse.ok) {
-            throw new Error(
-              optionData.message ||
-                "Failed to create option."
-            );
-          }
-
-          savedOptions.push({
-            option_text: option,
-          });
-        }
+        savedOptions = optionResults;
       }
 
       /* =========================================
