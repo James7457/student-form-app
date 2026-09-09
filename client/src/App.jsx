@@ -4,7 +4,7 @@ import FormBuilder from "./FormBuilder";
 
 import PublicForm from "./PublicForm";
 
-import Responses from "./Responses";
+import Responses from "./responses";
 
 import "./App.css";
 
